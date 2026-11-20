@@ -69,6 +69,7 @@ Le script recupere `main`, reconstruit l'image `site-equipe`, remplace le conten
 ```
 
 Le premier argument permet de choisir le conteneur. Par defaut, le conteneur est `site`.
+Les statistiques sont calculees avec `grep`, `cut`, `sort`, `uniq`, `head` et `awk`.
 
 ## Alias bonus
 

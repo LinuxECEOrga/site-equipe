@@ -22,7 +22,7 @@ fi
 LOGS="$(docker logs "$CONTAINER" 2>&1)"
 
 # Compter les lignes contenant une methode HTTP et un code de retour
-TOTAL="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | wc -l)"
+TOTAL="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | cut -d ' ' -f 1 | sort | uniq -c | awk '{sum += $1} END {print sum+0}')"
 
 # Afficher la phrase appropriee en absence de visites
 if [ "$TOTAL" -eq 0 ]; then
@@ -30,12 +30,12 @@ if [ "$TOTAL" -eq 0 ]; then
     exit 0
 fi
 
-# Compter les reponses HTTP 404 avec grep puis wc
-NOT_FOUND="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | awk '{print $9}' | grep -cx '404' || true)"
+# Compter les reponses HTTP 404 avec grep puis cut
+NOT_FOUND="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | cut -d ' ' -f 9 | grep -cx '404' || true)"
 # Extraire les adresses IP, les trier, compter et ordonner les frequences
-TOP_IP="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | awk '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')"
+TOP_IP="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | cut -d ' ' -f 1 | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')"
 # Extraire les pages demandees, les trier, compter et ordonner les frequences
-TOP_PAGE="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | awk '{print $7}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')"
+TOP_PAGE="$(printf '%s\n' "$LOGS" | grep -E '"(GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) ' | cut -d ' ' -f 7 | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')"
 
 # Afficher les statistiques
 echo "Nombre total de requetes HTTP : $TOTAL"
