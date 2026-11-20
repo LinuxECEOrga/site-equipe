@@ -101,3 +101,5 @@ Ajoutez les trois captures dans ce README apres validation du projet :
 ### 3. Statistiques Apache
 
 ![Capture des statistiques](captures/stats.png)
+
+Les captures sont facultatives pour le build Docker, mais elles permettent de documenter le rendu final.
